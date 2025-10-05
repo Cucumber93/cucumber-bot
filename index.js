@@ -1,16 +1,15 @@
-require('dotenv').config();
-const express = require('express')
-const webhookRoute = require('./routes/webhookRoute')
+// index.js
+require('dotenv').config(); // load .env first
+const express = require('express');
+const webhookRoute = require('./routes/webhookRoute');
 
-const app = express()
-app.use(express.json())
+const app = express();
 
-//webhook routeฃ
-app.get('/', (req, res) => res.send('OK - Expense bot running'));
-app.use('/webhook', webhookRoute)
+// mount webhook route (route handles its own body parsing after middleware)
+app.use('/webhook', webhookRoute);
 
-const port = process.env.PORT || 3000
+// optional simple root
+app.get('/', (req, res) => res.send('OK - server running'));
 
-app.listen(port,()=>{
-    console.log(`Server running on port ${port}`);
-})
+const port = process.env.PORT || 3000;
+app.listen(port, () => console.log(`Server running on port ${port}`));

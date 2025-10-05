@@ -1,32 +1,26 @@
-const line = require('@line/bot-sdk');
+// controllers/lineController.js
 const expenseService = require('../services/expense.service');
 
-const clientCache = {}; // cache clients per token
-
-function getClient(config) {
-  const token = config.channelAccessToken;
-  if (!clientCache[token]) clientCache[token] = new line.Client(config);
-  return clientCache[token];
-}
-
 async function handleEvent(event, config) {
-  const client = getClient(config);
-
-  // สนใจเฉพาะ message text เท่านั้น
-  if (event.type !== 'message' || event.message.type !== 'text') {
-    return Promise.resolve(null);
+  try {
+    // แค่ตัวอย่าง: สนใจเฉพาะข้อความ text
+    if (event.type !== 'message' || event.message.type !== 'text') return null;
+    const text = event.message.text;
+    const result = await expenseService.handleUserText(text);
+    // result.replyMessages เป็น array ของ message objects ที่จะส่งกลับ
+    if (result && result.replyMessages) {
+      const lineClient = new (require('@line/bot-sdk').Client)(config);
+      try {
+        await lineClient.replyMessage(event.replyToken, result.replyMessages);
+      } catch (err) {
+        console.error('replyMessage failed:', err);
+      }
+    }
+    return null;
+  } catch (err) {
+    console.error('handleEvent error:', err);
+    return null;
   }
-
-  const text = event.message.text.trim();
-  // (ในอนาคต: แยก user ด้วย event.source.userId)
-  const result = await expenseService.handleUserText(text);
-
-  if (result && result.replyMessages && result.replyMessages.length) {
-    return client.replyMessage(event.replyToken, result.replyMessages);
-  }
-
-  // fallback
-  return client.replyMessage(event.replyToken, { type: 'text', text: 'ไม่เข้าใจคำสั่ง — พิมพ์ "ช่วย" เพื่อดูคำสั่ง' });
 }
 
 module.exports = { handleEvent };
