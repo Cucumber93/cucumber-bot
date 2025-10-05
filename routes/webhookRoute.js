@@ -2,7 +2,7 @@
 const express = require('express');
 const line = require('@line/bot-sdk');
 // correct path and filename (one level up)
-const lineController = require('../controllers/line.confroller');
+const lineController = require('../controllers/line.controller');
 
 const router = express.Router();
 
