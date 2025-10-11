@@ -30,7 +30,7 @@ export async function addExpenseFromMessage(messageText){
         }
       ])
       .select(
-        `id,name,value,create_at, category:categoryId(name)`
+        `id,name,value,created_at, category:categoryId(name)`
       )
 
       if(error){
