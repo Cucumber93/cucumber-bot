@@ -7,13 +7,13 @@ const webhookRoute = require("./routes/webhook.route.js");
 dotenv.config();
 
 
-
-app.use(express.json()); // global json parser
+const app = express();
+// global json parser
 app.use(cors())
 
 app.use('/webhook', webhookRoute);
+app.use(express.json()); 
 
-const app = express();
 app.use('/api/expenses',expensesRoute);
 
 // optional simple root
