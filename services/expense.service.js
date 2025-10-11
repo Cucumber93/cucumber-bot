@@ -13,12 +13,12 @@ export const supabase = createClient(
 export async function addExpenseFromMessage(messageText){
   try{
     const parts = messageText.trim().split(' ')
-    if(parts.length<3)return 'Invalid format. Use: add [category] [description] [amount] ';
+    if(parts.length<3)return 'Invalid format. Use: add [category] [description] [value] ';
 
     const [categoryId,name,amountStr] = parts;
-    const amount = parseFloat(amountStr);
+    const value = parseFloat(amountStr);
 
-    if(isNaN(amount)) return ' Amount must be a number.'
+    if(isNaN(value)) return ' Amount must be a number.'
 
     const { data, error} = await supabase
       .from('ExpensesList')
@@ -26,7 +26,7 @@ export async function addExpenseFromMessage(messageText){
         {
           categoryId: parseInt(categoryId),
           name,
-          amount
+          value
         }
       ])
       .select(
@@ -39,7 +39,7 @@ export async function addExpenseFromMessage(messageText){
       }
 
       const expense = data[0];
-      return `Added ${expense.name} - ${expense.amount} in category ${expense.category.name}.`
+      return `Added ${expense.name} - ${expense.value} in category ${expense.category.name}.`
   }catch(err){
     console.error('Unexpected error:', err);
     return "Something went wrong. Please try again.";
