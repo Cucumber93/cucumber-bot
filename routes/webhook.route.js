@@ -17,7 +17,6 @@ router.get('/', (req, res) => res.send('OK - webhook'));
 // IMPORTANT: line.middleware before express.json()
 router.post('/', line.middleware(config), express.json(), async (req, res) => {
   try {
-    console.log('>>> webhook body:', JSON.stringify(req.body || {}));
     const events = (req.body && req.body.events) || [];
     await Promise.all(events.map(ev =>
       lineController.handleEvent(ev, config).catch(e => {

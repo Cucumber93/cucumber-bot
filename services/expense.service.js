@@ -1,12 +1,6 @@
-// services/expense.service.js
-import { createClient } from '@supabase/supabase-js';
-import dotenv from 'dotenv';
-dotenv.config();
 
-export const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_KEY
-);
+import { supabase } from '../config/superbaseClient.js';
+
 
 export async function addExpenseFromMessage(messageText) {
   try {
@@ -71,4 +65,26 @@ export async function addExpenseFromMessage(messageText) {
       ],
     };
   }
+}
+
+export async function getAllExpenses(){
+  const {data, error} = await supabase.from('ExpensesList').select('*');
+
+  if(error){
+    console.error('❌ Superbase error:', error);
+    throw new Error(error.message)
+  }
+
+  return data.map(item => new Expense(item))
+}
+
+export async function getExpenseById(id){
+  const {data,error} = await supabase
+  .from('ExpensesList')
+  .select('*')
+  .eq('id',id)
+  .single();
+
+  if(error)throw new Error(error.message)
+    return new Expense(data)
 }

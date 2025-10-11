@@ -1,10 +1,14 @@
-// index.js
-require('dotenv').config(); // load .env first
-const express = require('express');
-const webhookRoute = require('./routes/webhookRoute');
-// const { createClient } = require('@supabase/supabase-js');
 
+import dotenv from "dotenv";
+import express from "express";
+import cors from "cors";
+import expensesRoute from './routes/expense.route.js';
+import webhookRoute from './routes/webhook.route.js';
+
+dotenv.config();
 const app = express();
+app.use(express.json()); // global json parser
+app.use(cors())
 
 // const supabase = createClient(
 //   process.env.SUPABASE_URL,
@@ -18,6 +22,7 @@ const app = express();
 
 // mount webhook route (route handles its own body parsing after middleware)
 app.use('/webhook', webhookRoute);
+app.use('/api/expenses',expensesRoute);
 
 // optional simple root
 app.get('/', (req, res) => res.send('OK - server running'));
