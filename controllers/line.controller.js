@@ -1,6 +1,9 @@
 // controllers/line.controller.js
-const { Client } = require('@line/bot-sdk');
-const expenseService = require('../services/expense.service.js');
+// const { Client } = require('@line/bot-sdk');
+// const expenseService = require('../services/expense.service.js');
+
+import { Client } from '@line/bot-sdk';
+import * as expenseService from '../services/expense.service.js';
 
 async function handleEvent(event, config) {
   try {

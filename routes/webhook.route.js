@@ -1,8 +1,10 @@
-// routes/webhookRoute.js
-const express = require('express');
-const line = require('@line/bot-sdk');
-// correct path and filename (one level up)
-const lineController = require('../controllers/line.controller');
+
+// const express = require('express');
+// const line = require('@line/bot-sdk');
+// const lineController = require('../controllers/line.controller');
+import express from 'express';
+import line from '@line/bot-sdk';
+import * as lineController from '../controllers/line.controller.js';
 
 const router = express.Router();
 
