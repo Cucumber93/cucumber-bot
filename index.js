@@ -1,11 +1,12 @@
-
-import dotenv from "dotenv";
-import express from "express";
-import cors from "cors";
-import expensesRoute from './routes/expense.route.js';
-import webhookRoute from './routes/webhook.route.js';
+const dotenv = require("dotenv");
+const express = require("express");
+const cors = require("cors");
+const expensesRoute = require("./routes/expense.route.js");
+const webhookRoute = require("./routes/webhook.route.js");
 
 dotenv.config();
+
+
 const app = express();
 app.use(express.json()); // global json parser
 app.use(cors())

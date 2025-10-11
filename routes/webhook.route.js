@@ -1,10 +1,7 @@
 
-// const express = require('express');
-// const line = require('@line/bot-sdk');
-// const lineController = require('../controllers/line.controller');
-import express from 'express';
-import line from '@line/bot-sdk';
-import * as lineController from '../controllers/line.controller.js';
+const express = require('express');
+const line = require('@line/bot-sdk');
+const lineController = require('../controllers/line.controller');
 
 const router = express.Router();
 

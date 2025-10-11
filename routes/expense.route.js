@@ -1,9 +1,9 @@
-import express from 'express';
-import * as expenseController from '../controllers/expense.controller.js';
+const express = require("express");
+const expenseController = require("../controllers/expense.controller.js");
 
-const router = express.Router()
+const router = express.Router();
 
-router.get('/', expenseController.getAll);
-router.get('/:id', expenseController.getById);
+router.get("/", expenseController.getAll);
+router.get("/:id", expenseController.getById);
 
-export default router;
+module.exports = router;

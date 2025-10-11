@@ -1,14 +1,13 @@
+const { supabase } = require("../config/superbaseClient.js");
+const { Expense } = require("../models/expense.model.js"); // ✅ เพิ่ม import class Expense
 
-import { supabase } from '../config/superbaseClient.js';
-
-
-export async function addExpenseFromMessage(messageText) {
+async function addExpenseFromMessage(messageText) {
   try {
-    const parts = messageText.trim().split(' ');
+    const parts = messageText.trim().split(" ");
     if (parts.length < 3) {
       return {
         replyMessages: [
-          { type: 'text', text: '⚠️ Invalid format. Use: [categoryId] [description] [value]' },
+          { type: "text", text: "⚠️ Invalid format. Use: [categoryId] [description] [value]" },
         ],
       };
     }
@@ -18,14 +17,12 @@ export async function addExpenseFromMessage(messageText) {
 
     if (isNaN(value)) {
       return {
-        replyMessages: [
-          { type: 'text', text: '⚠️ Amount must be a number.' },
-        ],
+        replyMessages: [{ type: "text", text: "⚠️ Amount must be a number." }],
       };
     }
 
     const { data, error } = await supabase
-      .from('ExpensesList')
+      .from("ExpensesList")
       .insert([
         {
           categoryId: parseInt(categoryId),
@@ -33,58 +30,50 @@ export async function addExpenseFromMessage(messageText) {
           value,
         },
       ])
-      .select(`
-        id, name, value, created_at, category:categoryId(name)
-      `);
+      .select(`id, name, value, created_at, category:categoryId(name)`);
 
     if (error) {
-      console.error('❌ Insert error:', error);
+      console.error("❌ Insert error:", error);
       return {
-        replyMessages: [
-          { type: 'text', text: '❌ Failed to save data to database.' },
-        ],
+        replyMessages: [{ type: "text", text: "❌ Failed to save data to database." }],
       };
     }
 
-    console.log('✅ Supabase insert success:', data);
+    console.log("✅ Supabase insert success:", data);
     const expense = data[0];
 
     return {
       replyMessages: [
         {
-          type: 'text',
+          type: "text",
           text: `✅ Added "${expense.name}" (${expense.value}฿) to category ${expense.category.name}.`,
         },
       ],
     };
   } catch (err) {
-    console.error('💥 Unexpected error:', err);
+    console.error("💥 Unexpected error:", err);
     return {
-      replyMessages: [
-        { type: 'text', text: '❌ Something went wrong. Please try again.' },
-      ],
+      replyMessages: [{ type: "text", text: "❌ Something went wrong. Please try again." }],
     };
   }
 }
 
-export async function getAllExpenses(){
-  const {data, error} = await supabase.from('ExpensesList').select('*');
+async function getAllExpenses() {
+  const { data, error } = await supabase.from("ExpensesList").select("*");
 
-  if(error){
-    console.error('❌ Superbase error:', error);
-    throw new Error(error.message)
+  if (error) {
+    console.error("❌ Supabase error:", error);
+    throw new Error(error.message);
   }
 
-  return data.map(item => new Expense(item))
+  return data.map((item) => new Expense(item));
 }
 
-export async function getExpenseById(id){
-  const {data,error} = await supabase
-  .from('ExpensesList')
-  .select('*')
-  .eq('id',id)
-  .single();
+async function getExpenseById(id) {
+  const { data, error } = await supabase.from("ExpensesList").select("*").eq("id", id).single();
 
-  if(error)throw new Error(error.message)
-    return new Expense(data)
+  if (error) throw new Error(error.message);
+  return new Expense(data);
 }
+
+module.exports = { addExpenseFromMessage, getAllExpenses, getExpenseById };
