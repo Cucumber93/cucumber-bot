@@ -1,4 +1,3 @@
-
 const express = require('express');
 const line = require('@line/bot-sdk');
 const lineController = require('../controllers/line.controller');
@@ -10,23 +9,29 @@ const config = {
   channelSecret: process.env.LINE_CHANNEL_SECRET,
 };
 
-// health-check (GET)
+// ✅ health check
 router.get('/', (req, res) => res.send('OK - webhook'));
 
-// IMPORTANT: line.middleware before express.json()
-router.post('/', line.middleware(config), express.json(), async (req, res) => {
+// ✅ IMPORTANT: DO NOT use express.json() here
+router.post('/', line.middleware(config), async (req, res) => {
   try {
+    console.log('>>>> Webhook events:', JSON.stringify(req.body.events));
+
     const events = (req.body && req.body.events) || [];
-    await Promise.all(events.map(ev =>
-      lineController.handleEvent(ev, config).catch(e => {
-        console.error('event handler error:', e);
-        return null;
-      })
-    ));
+
+    await Promise.all(
+      events.map((ev) =>
+        lineController.handleEvent(ev, config).catch((e) => {
+          console.error('event handler error:', e);
+          return null;
+        })
+      )
+    );
+
     return res.status(200).send('OK');
   } catch (err) {
     console.error('Unhandled webhook error:', err);
-    return res.status(200).send('OK');
+    return res.status(500).send('Internal Server Error');
   }
 });
 
