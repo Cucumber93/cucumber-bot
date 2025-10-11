@@ -1,79 +1,47 @@
-const { parseText } = require('../utils/parser');
-const model = require('../models/expense.model');
+// const {supabase} = require('../config/supabaseClient');
+// expense.service.js
+import { createClient } from '@supabase/supabase-js';
+import dotenv from 'dotenv';
+dotenv.config();
 
-function todayIso() {
-  return new Date().toISOString().slice(0, 10);
-}
+export const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_KEY
+);
 
-async function handleUserText(text) {
-  const parsed = parseText(text);
 
-  switch (parsed.intent) {
-    case 'help':
-      return {
-        replyMessages: [
-          {
-            type: 'text',
-            text:
-              'คำสั่งที่ใช้ได้:\n' +
-              '- เพิ่ม <จำนวน> <หมวด> [YYYY-MM-DD] [note]\n' +
-              '- รายการ\n' +
-              '- สรุป [YYYY-MM]\n' +
-              '- ลบ <id>\n\n' +
-              'ตัวอย่าง: เพิ่ม 120 กาแฟ\nพิมพ์ "list" หรือ "รายการ" เพื่อดูรายการล่าสุด'
-          }
-        ]
-      };
+export async function addExpenseFromMessage(messageText){
+  try{
+    const parts = messageText.trim().split(' ')
+    if(parts.length<3)return 'Invalid format. Use: add [category] [description] [amount] ';
 
-    case 'add': {
-      const p = parsed.payload;
-      const date = p.date && /^\d{4}-\d{2}-\d{2}$/.test(p.date) ? p.date : todayIso();
-      const item = {
-        amount: Number(p.amount),
-        category: p.category || 'อื่นๆ',
-        note: p.note || '',
-        date,
-        createdAt: new Date().toISOString()
-      };
-      const saved = model.addExpense(item);
-      const textResp = `บันทึกเรียบร้อย: id=${saved.id} | ${saved.amount.toFixed(2)} บาท | ${saved.category} | ${saved.date}`;
-      return { replyMessages: [ { type: 'text', text: textResp } ] };
-    }
+    const [categoryId,name,amountStr] = parts;
+    const amount = parseFloat(amountStr);
 
-    case 'list': {
-      const all = model.getAllExpenses();
-      if (!all.length) return { replyMessages: [{ type: 'text', text: 'ยังไม่มีรายการ' }] };
-      // เอารายการล่าสุด 20 รายการ (จากใหม่ไปเก่า)
-      const latest = all.slice(-20).reverse();
-      const lines = latest.map(e => `id=${e.id} | ${e.amount.toFixed(2)} | ${e.category} | ${e.date}`);
-      return { replyMessages: [ { type: 'text', text: 'รายการล่าสุด:\n' + lines.join('\n') } ] };
-    }
+    if(isNaN(amount)) return ' Amount must be a number.'
 
-    case 'summary': {
-      const month = parsed.payload && parsed.payload.month ? parsed.payload.month : todayIso().slice(0,7);
-      const all = model.getAllExpenses();
-      const forMonth = all.filter(e => e.date && e.date.slice(0,7) === month);
-      if (!forMonth.length) {
-        return { replyMessages: [ { type: 'text', text: `ไม่พบรายการในเดือน ${month}` } ] };
+    const { data, error} = await supabase
+      .from('ExpensesList')
+      .insert([
+        {
+          categoryId: parseInt(categoryId),
+          name,
+          amount
+        }
+      ])
+      .select(
+        `id,name,value,create_at, category:categoryId(name)`
+      )
+
+      if(error){
+        console.error('Insert error: ',error)
+        return 'Failed to save data'
       }
-      const total = forMonth.reduce((s, x) => s + Number(x.amount), 0);
-      const byCat = {};
-      forMonth.forEach(e => { byCat[e.category] = (byCat[e.category] || 0) + Number(e.amount); });
-      let text = `สรุปรายจ่าย ${month}\nรวม: ${total.toFixed(2)} บาท\n`;
-      for (const cat of Object.keys(byCat)) text += `${cat}: ${byCat[cat].toFixed(2)} บาท\n`;
-      return { replyMessages: [ { type: 'text', text } ] };
-    }
 
-    case 'delete': {
-      const id = parsed.payload.id;
-      const ok = model.deleteExpense(id);
-      const text = ok ? `ลบรายการ id=${id} เรียบร้อย` : `ไม่พบรายการ id=${id}`;
-      return { replyMessages: [ { type: 'text', text } ] };
-    }
-
-    default:
-      return { replyMessages: [ { type: 'text', text: 'คำสั่งไม่ถูกต้อง — พิมพ์ "ช่วย" เพื่อดูคำสั่งที่ใช้ได้' } ] };
+      const expense = data[0];
+      return `Added ${expense.name} - ${expense.amount} in category ${expense.category.name}.`
+  }catch(err){
+    console.error('Unexpected error:', err);
+    return "Something went wrong. Please try again.";
   }
 }
-
-module.exports = { handleUserText };
