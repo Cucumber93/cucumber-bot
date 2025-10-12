@@ -1,4 +1,5 @@
-const supabase = require("../config/superbaseClient")
+const { createClient } = require("@supabase/supabase-js");
+const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
 
 exports.getTrendExpensesHourly = async () => {
   const today = new Date();
