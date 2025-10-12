@@ -59,7 +59,7 @@ async function addExpenseFromMessage(messageText) {
 }
 
 async function getAllExpenses() {
-  const { data, error } = await supabase.from("ExpensesList").select("*");
+  const { data, error } = await supabase.from("ExpensesList").select("id, name, categoryId, value, created_at");
 
   if (error) {
     console.error("❌ Supabase error:", error);
