@@ -4,6 +4,7 @@ const cors = require("cors");
 const expensesRoute = require("./routes/expense.route.js");
 const balanceRoute = require("./routes/balance.route.js");
 const trendExpensesRoute = require("./routes/trendExpenses.route.js");
+const trendIncomeAndExpensesRoute = require('./routes/trendIncomeAndExpenses.route.js')
 const webhookRoute = require("./routes/webhook.route.js");
 
 dotenv.config();
@@ -19,6 +20,7 @@ app.use(express.json());
 app.use('/api/expenses',expensesRoute);
 app.use('/api/balance',balanceRoute)
 app.use('/api/trend-expenses',trendExpensesRoute)
+app.use('/api/compare',trendIncomeAndExpensesRoute)
 
 // optional simple root
 app.get('/', (req, res) => res.send('OK - server running'));
