@@ -1,6 +1,5 @@
 const trendExpensesService = require('../services/trendEcpenses.service.js');
 
-const trendExpensesService = require("../services/trendEcpenses.service.js");
 
 async function getTrendExpenses(req, res) {
   try {

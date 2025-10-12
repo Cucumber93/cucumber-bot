@@ -3,6 +3,6 @@ const trendExpensesController = require('../controllers/trendExpenses.controller
 
 const router = require('express').Router();
 
-router.get("/:type", getTrendExpenses);
+router.get("/:type", trendExpensesController.getTrendExpenses);
 
 module.exports = router;
