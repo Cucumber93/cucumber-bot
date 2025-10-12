@@ -16,7 +16,7 @@ async function getTrendExpenses(req, res) {
         break;
 
       case "last30days":
-        trendExpenses = await trendExpensesService.getTrendExpensesLastt30Days();
+        trendExpenses = await trendExpensesService.getTrendExpensesLast30Days();
         break;
 
       default:
