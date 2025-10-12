@@ -18,6 +18,12 @@ async function getTrendExpenses(req, res) {
       case "last30days":
         trendExpenses = await trendExpensesService.getTrendExpensesLast30Days();
         break;
+      case "monthly":
+        trendExpenses = await trendExpensesService.getTrendExpensesMonthly();
+        break;
+      case "yearly":
+        trendExpenses = await trendExpensesService.getTrendExpensesYearly();
+        break;
 
       default:
         return res.status(400).json({

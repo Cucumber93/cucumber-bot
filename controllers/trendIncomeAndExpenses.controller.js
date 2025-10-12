@@ -8,6 +8,16 @@ exports.getBalanceByType = async (req, res) => {
 
     switch (type) {
 
+      case "hourly":
+        result = await trendIncomeAndExpenses.getHourlySummary();
+        break;
+      case "last7days":
+        result = await trendIncomeAndExpenses.getLast7DaysSummary();
+        break;
+      case "last30days":
+        result = await trendIncomeAndExpenses.getLast30DaysSummary();
+        break;
+
       // 📅 รวมยอดรายเดือน
       case "monthly":
         result = await trendIncomeAndExpenses.getMonthlySummary();
