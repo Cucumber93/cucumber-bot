@@ -1,8 +1,5 @@
-const supabase = require("../config/superbaseClient").supabase;
+const supabase = require("../config/superbaseClient")
 
-// ----------------------------------------------------
-// 🕛 ฟังก์ชันที่มีอยู่: รายชั่วโมงของวันปัจจุบัน
-// ----------------------------------------------------
 exports.getTrendExpensesHourly = async () => {
   const today = new Date();
   const startOfDay = new Date(today);
@@ -47,9 +44,6 @@ exports.getTrendExpensesHourly = async () => {
   return trendExpenses;
 };
 
-// ----------------------------------------------------
-// 📅 ฟังก์ชันใหม่: รายวันย้อนหลัง 7 วัน (รวมวันนี้)
-// ----------------------------------------------------
 exports.getTrendExpensesLast7Days = async () => {
   const today = new Date();
   const startDate = new Date();
@@ -92,9 +86,6 @@ exports.getTrendExpensesLast7Days = async () => {
   return trendExpenses;
 };
 
-// ----------------------------------------------------
-// 🗓 ฟังก์ชันใหม่: รายวันย้อนหลัง 30 วัน (รวมวันนี้)
-// ----------------------------------------------------
 exports.getTrendExpensesLast30Days = async () => {
   const today = new Date();
   const startDate = new Date();
