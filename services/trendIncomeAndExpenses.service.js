@@ -29,24 +29,26 @@ exports.getHourlySummary = async () => {
     const hourly = {};
 
     incomeData.forEach((item) => {
-      const h = new Date(item.created_at).getHours().toString().padStart(2, "0") + ":00";
-      if (!hourly[h]) hourly[h] = { income: 0, expense: 0 };
-      hourly[h].income += Number(item.amount || 0);
+      const period =
+        new Date(item.created_at).getHours().toString().padStart(2, "0") + ":00";
+      if (!hourly[period]) hourly[period] = { income: 0, expense: 0 };
+      hourly[period].income += Number(item.amount || 0);
     });
 
     expenseData.forEach((item) => {
-      const h = new Date(item.created_at).getHours().toString().padStart(2, "0") + ":00";
-      if (!hourly[h]) hourly[h] = { income: 0, expense: 0 };
-      hourly[h].expense += Number(item.value || 0);
+      const period =
+        new Date(item.created_at).getHours().toString().padStart(2, "0") + ":00";
+      if (!hourly[period]) hourly[period] = { income: 0, expense: 0 };
+      hourly[period].expense += Number(item.value || 0);
     });
 
-    const result = Object.entries(hourly).map(([hour, value]) => ({
-      hour,
+    const result = Object.entries(hourly).map(([period, value]) => ({
+      period,
       totalIncome: value.income,
       totalExpense: value.expense,
     }));
 
-    result.sort((a, b) => parseInt(a.hour) - parseInt(b.hour));
+    result.sort((a, b) => parseInt(a.period) - parseInt(b.period));
     return result;
   } catch (err) {
     throw new Error(err.message);
@@ -60,7 +62,7 @@ exports.getLast7DaysSummary = async () => {
   try {
     const today = new Date();
     const startDate = new Date();
-    startDate.setDate(today.getDate() - 6); // รวมวันนี้ด้วย
+    startDate.setDate(today.getDate() - 6);
 
     const { data: incomeData, error: incomeError } = await supabase
       .from("Income")
@@ -79,24 +81,24 @@ exports.getLast7DaysSummary = async () => {
     const daily = {};
 
     incomeData.forEach((item) => {
-      const d = new Date(item.created_at).toISOString().split("T")[0];
-      if (!daily[d]) daily[d] = { income: 0, expense: 0 };
-      daily[d].income += Number(item.amount || 0);
+      const period = new Date(item.created_at).toISOString().split("T")[0];
+      if (!daily[period]) daily[period] = { income: 0, expense: 0 };
+      daily[period].income += Number(item.amount || 0);
     });
 
     expenseData.forEach((item) => {
-      const d = new Date(item.created_at).toISOString().split("T")[0];
-      if (!daily[d]) daily[d] = { income: 0, expense: 0 };
-      daily[d].expense += Number(item.value || 0);
+      const period = new Date(item.created_at).toISOString().split("T")[0];
+      if (!daily[period]) daily[period] = { income: 0, expense: 0 };
+      daily[period].expense += Number(item.value || 0);
     });
 
-    const result = Object.entries(daily).map(([date, value]) => ({
-      date,
+    const result = Object.entries(daily).map(([period, value]) => ({
+      period,
       totalIncome: value.income,
       totalExpense: value.expense,
     }));
 
-    result.sort((a, b) => new Date(a.date) - new Date(b.date));
+    result.sort((a, b) => new Date(a.period) - new Date(b.period));
     return result;
   } catch (err) {
     throw new Error(err.message);
@@ -129,24 +131,24 @@ exports.getLast30DaysSummary = async () => {
     const daily = {};
 
     incomeData.forEach((item) => {
-      const d = new Date(item.created_at).toISOString().split("T")[0];
-      if (!daily[d]) daily[d] = { income: 0, expense: 0 };
-      daily[d].income += Number(item.amount || 0);
+      const period = new Date(item.created_at).toISOString().split("T")[0];
+      if (!daily[period]) daily[period] = { income: 0, expense: 0 };
+      daily[period].income += Number(item.amount || 0);
     });
 
     expenseData.forEach((item) => {
-      const d = new Date(item.created_at).toISOString().split("T")[0];
-      if (!daily[d]) daily[d] = { income: 0, expense: 0 };
-      daily[d].expense += Number(item.value || 0);
+      const period = new Date(item.created_at).toISOString().split("T")[0];
+      if (!daily[period]) daily[period] = { income: 0, expense: 0 };
+      daily[period].expense += Number(item.value || 0);
     });
 
-    const result = Object.entries(daily).map(([date, value]) => ({
-      date,
+    const result = Object.entries(daily).map(([period, value]) => ({
+      period,
       totalIncome: value.income,
       totalExpense: value.expense,
     }));
 
-    result.sort((a, b) => new Date(a.date) - new Date(b.date));
+    result.sort((a, b) => new Date(a.period) - new Date(b.period));
     return result;
   } catch (err) {
     throw new Error(err.message);
@@ -171,15 +173,15 @@ exports.getMonthlySummary = async () => {
     const monthly = {};
 
     incomeData.forEach((item) => {
-      const key = new Date(item.created_at).toISOString().slice(0, 7); // YYYY-MM
-      if (!monthly[key]) monthly[key] = { income: 0, expense: 0 };
-      monthly[key].income += Number(item.amount || 0);
+      const period = new Date(item.created_at).toISOString().slice(0, 7); // YYYY-MM
+      if (!monthly[period]) monthly[period] = { income: 0, expense: 0 };
+      monthly[period].income += Number(item.amount || 0);
     });
 
     expenseData.forEach((item) => {
-      const key = new Date(item.created_at).toISOString().slice(0, 7);
-      if (!monthly[key]) monthly[key] = { income: 0, expense: 0 };
-      monthly[key].expense += Number(item.value || 0);
+      const period = new Date(item.created_at).toISOString().slice(0, 7);
+      if (!monthly[period]) monthly[period] = { income: 0, expense: 0 };
+      monthly[period].expense += Number(item.value || 0);
     });
 
     const result = Object.entries(monthly).map(([period, value]) => ({
@@ -196,43 +198,7 @@ exports.getMonthlySummary = async () => {
 };
 
 /* ========================================================
- 🧾 5. ดึงรายละเอียดรายเดือน
-======================================================== */
-exports.getMonthlyDetails = async (year, month) => {
-  try {
-    const startDate = new Date(year, month - 1, 1);
-    const endDate = new Date(year, month, 0); // วันสุดท้ายของเดือน
-    startDate.setHours(0, 0, 0, 0);
-    endDate.setHours(23, 59, 59, 999);
-
-    const { data: incomeData, error: incomeError } = await supabase
-      .from("Income")
-      .select("*")
-      .gte("created_at", startDate.toISOString())
-      .lte("created_at", endDate.toISOString());
-    if (incomeError) throw new Error(incomeError.message);
-
-    const { data: expenseData, error: expenseError } = await supabase
-      .from("ExpensesList")
-      .select("*")
-      .gte("created_at", startDate.toISOString())
-      .lte("created_at", endDate.toISOString());
-    if (expenseError) throw new Error(expenseError.message);
-
-    return {
-      month: `${year}-${String(month).padStart(2, "0")}`,
-      periodStart: startDate.toISOString().split("T")[0],
-      periodEnd: endDate.toISOString().split("T")[0],
-      income: incomeData,
-      expenses: expenseData,
-    };
-  } catch (err) {
-    throw new Error(err.message);
-  }
-};
-
-/* ========================================================
- 📆 6. รวมยอดรายปี
+ 📆 5. รวมยอดรายปี
 ======================================================== */
 exports.getYearlySummary = async () => {
   try {
@@ -249,24 +215,24 @@ exports.getYearlySummary = async () => {
     const yearly = {};
 
     incomeData.forEach((item) => {
-      const year = new Date(item.created_at).getFullYear();
-      if (!yearly[year]) yearly[year] = { income: 0, expense: 0 };
-      yearly[year].income += Number(item.amount || 0);
+      const period = new Date(item.created_at).getFullYear().toString(); // YYYY
+      if (!yearly[period]) yearly[period] = { income: 0, expense: 0 };
+      yearly[period].income += Number(item.amount || 0);
     });
 
     expenseData.forEach((item) => {
-      const year = new Date(item.created_at).getFullYear();
-      if (!yearly[year]) yearly[year] = { income: 0, expense: 0 };
-      yearly[year].expense += Number(item.value || 0);
+      const period = new Date(item.created_at).getFullYear().toString();
+      if (!yearly[period]) yearly[period] = { income: 0, expense: 0 };
+      yearly[period].expense += Number(item.value || 0);
     });
 
-    const result = Object.entries(yearly).map(([year, value]) => ({
-      year,
+    const result = Object.entries(yearly).map(([period, value]) => ({
+      period,
       totalIncome: value.income,
       totalExpense: value.expense,
     }));
 
-    result.sort((a, b) => Number(a.year) - Number(b.year));
+    result.sort((a, b) => Number(a.period) - Number(b.period));
     return result;
   } catch (err) {
     throw new Error(err.message);
