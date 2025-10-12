@@ -1,6 +1,6 @@
 const trendIncomeAndExpenses = require('../services/trendIncomeAndExpenses.service')
 
-exports.getBalanceByType = async (req, res) => {
+exports.getCompareByType = async (req, res) => {
   try {
     const { type } = req.params;
 

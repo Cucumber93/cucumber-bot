@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const balanceController = require("../controllers/balance.controller.js");
+const trendIncomeAndExpensesController = require('../controllers/trendIncomeAndExpenses.controller.js')
 
-router.get("/:type", balanceController.getBalance);
+router.get("/:type", trendIncomeAndExpensesController.getCompareByType);
 
 module.exports = router;
