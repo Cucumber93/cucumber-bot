@@ -46,5 +46,5 @@ exports.deleteCategory = async (id,userId)=>{
     .eq('userId',userId)
 
     if(error) throw error
-    return {message : 'Category deleted successfully'}
+    return {message : 'Category Expenses deleted '}
 }

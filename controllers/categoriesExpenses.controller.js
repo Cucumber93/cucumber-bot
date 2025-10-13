@@ -11,7 +11,7 @@ exports.createCategory = async(req,res)=>{
         const data = await service.createCategory(name,userId)
         res.status(200).json({message: 'Category created',data})
     }catch(error){
-        console.error('Create category error: ',error)
+        console.error('Create category expenese error: ',error)
         res.status(500).json({error: error.message})
     }
 }
@@ -25,7 +25,7 @@ exports.getCategoriesByUser = async(req,res)=>{
         const data = await service.getCategoriesByUser(userId)
         res.status(200).json({message: 'Get category success!',data})
     }catch(error){
-        console.error('Get category error: ',error)
+        console.error('Get Expenses category error: ',error)
         res.status(500).json({error: error.message})
     }
 }
@@ -37,9 +37,9 @@ exports.updateCategory = async(req,res)=>{
         if(!id || !name || !userId) return res.status(400).json({error: 'Missing id, name or userId'})
 
         const data = await service.updateCategory(id,name,userId)
-        res.status(200).json({message: 'Updated category',data})
+        res.status(200).json({message: 'Updated Category Expenses',data})
     }catch(error){
-        console.error('Update category error',error)
+        console.error('Update Category Expenses error',error)
         res.status(500).json({error:error.message})
     }
 }
@@ -51,9 +51,9 @@ exports.deleteCategory = async(req,res)=>{
         if(!id,!userId) return res.status(400).json({error: 'Missing id or userId'})
 
         const data = await service.deleteCategory(id,userId)
-        res.status(200).json({message: 'Deleted category'})
+        res.status(200).json({message: 'Deleted category expenses'})
     }catch(error){
-        console.error('Delete cetagory error: ',error)
+        console.error('Delete cetagory expenses error: ',error)
         res.status(500).json({error: error.message})
     }
 }
