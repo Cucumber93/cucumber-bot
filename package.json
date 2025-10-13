@@ -13,9 +13,11 @@
   "dependencies": {
     "@line/bot-sdk": "^10.3.0",
     "@supabase/supabase-js": "^2.75.0",
+    "axios": "^1.12.2",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
     "postgres": "^3.4.7"
   }
 }
