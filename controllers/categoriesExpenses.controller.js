@@ -44,6 +44,7 @@ exports.updateCategory = async(req,res)=>{
     }
 }
 
+// Delete
 exports.deleteCategory = async(req,res)=>{
     try{
         const {id,userId} = req.body

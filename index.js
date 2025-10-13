@@ -8,6 +8,7 @@ const trendIncomeAndExpensesRoute = require('./routes/trendIncomeAndExpenses.rou
 const webhookRoute = require("./routes/webhook.route.js");
 const authRoute = require('./routes/auth.route.js')
 const categoryIncomeRoute = require("./routes/categoriesIncome.route.js")
+const categoryExpenses = require("./routes/categoriesExpenses.route.js")
 
 dotenv.config();
 
@@ -25,6 +26,7 @@ app.use('/api/balance',balanceRoute)
 app.use('/api/trend-expenses',trendExpensesRoute)
 app.use('/api/compare',trendIncomeAndExpensesRoute)
 app.use("/api/category-income", categoryIncomeRoute)
+app.use("api/category-expenses",categoryExpenses)
 
 // optional simple root
 app.get('/', (req, res) => res.send('OK - server running'));
