@@ -17,12 +17,12 @@ exports.createCategory = async(req,res)=>{
 }
 
 // Read
-exports.getCategoriesByUser = async(req,res)=>{
+exports.getAllCategoriesByUser = async(req,res)=>{
     try{
         const {userId} = req.body
         if(!userId) return res.status(400).json({error: 'Missing userId'})
 
-        const data = await service.getCategoriesByUser(userId)
+        const data = await service.getAllCategoriesByUser(userId)
         res.status(200).json({message: 'Get category success!',data})
     }catch(error){
         console.error('Get Expenses category error: ',error)
@@ -48,10 +48,10 @@ exports.updateCategory = async(req,res)=>{
 exports.deleteCategory = async(req,res)=>{
     try{
         const {id,userId} = req.body
-        if(!id,!userId) return res.status(400).json({error: 'Missing id or userId'})
+        if(!id||!userId) return res.status(400).json({error: 'Missing id or userId'})
 
         const data = await service.deleteCategory(id,userId)
-        res.status(200).json({message: 'Deleted category expenses'})
+        res.status(200).json({message: 'Deleted category expenses'},data)
     }catch(error){
         console.error('Delete cetagory expenses error: ',error)
         res.status(500).json({error: error.message})

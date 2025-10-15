@@ -13,7 +13,7 @@ exports.createCategory = async (name,userId)=>{
 }
 
 // Read
-exports.getCategoriesByUser = async (userId)=>{
+exports.getAllCategoriesByUser = async (userId)=>{
     const {data,error} = await supabase
     .from('category_expenses')
     .select('*')
