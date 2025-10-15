@@ -28,7 +28,7 @@ app.use('/api/trend-expenses',trendExpensesRoute)
 app.use('/api/compare',trendIncomeAndExpensesRoute)
 app.use("/api/category-income", categoryIncomeRoute)
 app.use("/api/category-expenses",categoryExpenses)
-app.use('/api/list-expense',,listExpense)
+app.use('/api/list-expense',listExpense)
 
 // optional simple root
 app.get('/', (req, res) => res.send('OK - server running'));
