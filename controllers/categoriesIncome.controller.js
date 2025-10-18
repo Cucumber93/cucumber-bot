@@ -16,12 +16,12 @@ exports.createCategory = async (req, res) => {
 }
 
 // Read
-exports.getCategoriesByUser = async(req,res)=>{
+exports.getAllCategoriesByUser = async(req,res)=>{
   try{
     const {userId} = req.body
     if(!userId) return res.status(400).json({error: 'Missing userId'})
 
-    const data = await service.getCategoriesByUser(userId)
+    const data = await service.getAllCategoriesByUser(userId)
     res.status(200).json({message: 'Get category income success!',data})
   }catch(error){
     console.error('Get Category Income error: ',error)

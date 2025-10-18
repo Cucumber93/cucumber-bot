@@ -4,7 +4,7 @@ const controller = require("../controllers/categoriesIncome.controller.js")
 
 // POST: เพิ่ม Category ผ่าน API
 router.post("/create", controller.createCategory)
-router.post("/get",controller.getCategoriesByUser)
+router.post("/get-all",controller.getAllCategoriesByUser)
 router.post("/update",controller.updateCategory)
 router.post("/delete",controller.deleteCategory)
 
