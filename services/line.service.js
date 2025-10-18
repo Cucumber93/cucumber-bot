@@ -26,7 +26,7 @@ async function saveUserMessage(userId, text) {
     }
 
     let [type, category, name, amount] = parts;
-    type = normalizeType(type);
+    type = normalizeType(type.toLowerCase());
     const value = parseFloat(amount);
 
     console.log('part: ',parts)
