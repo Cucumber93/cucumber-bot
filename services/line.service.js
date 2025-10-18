@@ -29,6 +29,11 @@ async function saveUserMessage(userId, text) {
     type = normalizeType(type);
     const value = parseFloat(amount);
 
+    console.log('part: ',parts)
+    console.log('type: ',type)
+    console.log('category: ',category)
+    console.log('name: ',name)
+    console.log('amount: ',amount)
     if (isNaN(value)) {
       return { message: "❌ จำนวนเงินไม่ถูกต้อง" };
     }
