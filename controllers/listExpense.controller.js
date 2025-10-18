@@ -5,8 +5,8 @@ exports.createList = async(req,res)=>{
     try{
         const {name,amount,categoryId,userId} = req.body
         if(!name || !categoryId || !userId) return res.status(400).json({error: "Missing name , amount, categoryId or userId"})
-        
-        const data = await service.createList(name,amount,categoryId,userId)
+        console.log('in controller')
+        const data = await service.createList(name,amount,userId,categoryId)
         res.status(200).json({message: 'List expense created'},data)
     }catch(error){
         console.error('Create List expense error: ',error)

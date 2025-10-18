@@ -7,7 +7,9 @@ exports.createList = async(name,amount,userId,categoryId)=>{
     .insert([{name,amount,userId,categoryId}])
     .select()
 
+    console.log('huhhhh')
     if(error) throw error
+    console.log('huhhhh2')
     return data[0]
 }
 
