@@ -21,7 +21,7 @@ router.post('/', line.middleware(config), async (req, res) => {
 
     await Promise.all(
       events.map((ev) =>
-        lineController.handleEvent(ev, config).catch((e) => {
+        lineController.handleLineMessage(ev, config).catch((e) => {
           console.error('event handler error:', e);
           return null;
         })
