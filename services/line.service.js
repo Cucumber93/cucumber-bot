@@ -1,5 +1,5 @@
-const {createClient } = require('@supabase/supabase-js')
-const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY)
+const { createClient } = require("@supabase/supabase-js");
+const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
 
 function normalizeType(type) {
   const map = {
@@ -13,6 +13,10 @@ function normalizeType(type) {
 
 async function saveUserMessage(userId, text) {
   try {
+    // ✅ ตรวจสอบและบันทึก userId ลง table users
+    await ensureUserExists(userId);
+
+    // ✅ แยกข้อความ [type] [category] [name] [amount]
     const parts = text.trim().split(" ");
     if (parts.length < 4) {
       return {
@@ -29,8 +33,13 @@ async function saveUserMessage(userId, text) {
       return { message: "❌ จำนวนเงินไม่ถูกต้อง" };
     }
 
+    // ✅ เลือกตารางหมวดหมู่ให้ตรงกับประเภท
+    const categoryTable =
+      type === "expense" ? "category_expenses" : "category_income";
+
+    // ✅ ตรวจว่าหมวดหมู่มีหรือยัง
     const { data: categoryData, error: catErr } = await supabase
-      .from("category")
+      .from(categoryTable)
       .select("id")
       .eq("name", category)
       .maybeSingle();
@@ -39,17 +48,20 @@ async function saveUserMessage(userId, text) {
 
     let categoryId;
     if (!categoryData) {
+      // ถ้าไม่มี category ให้สร้างใหม่
       const { data: newCat, error: insertCatErr } = await supabase
-        .from("category")
+        .from(categoryTable)
         .insert([{ name: category }])
         .select()
         .single();
+
       if (insertCatErr) throw insertCatErr;
       categoryId = newCat.id;
     } else {
       categoryId = categoryData.id;
     }
 
+    // ✅ แยก insert ตามประเภท
     if (type === "expense") {
       const { error } = await supabase.from("list_expense").insert([
         {
@@ -83,6 +95,32 @@ async function saveUserMessage(userId, text) {
   } catch (err) {
     console.error("Insert error:", err.message);
     return { message: `❌ เกิดข้อผิดพลาด: ${err.message}` };
+  }
+}
+
+// ✅ ฟังก์ชันตรวจสอบและเพิ่มผู้ใช้ใหม่ในตาราง users
+async function ensureUserExists(userId) {
+  try {
+    const { data: existing, error } = await supabase
+      .from("users")
+      .select("id")
+      .eq("line_user_id", userId)
+      .maybeSingle();
+
+    if (error) throw error;
+
+    if (!existing) {
+      const { error: insertErr } = await supabase
+        .from("users")
+        .insert([{ line_user_id: userId }]);
+
+      if (insertErr) throw insertErr;
+      console.log(`🆕 Added new user: ${userId}`);
+    } else {
+      console.log(`✅ Existing user: ${userId}`);
+    }
+  } catch (err) {
+    console.error("User insert/check error:", err.message);
   }
 }
 
