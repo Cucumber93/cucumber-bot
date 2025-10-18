@@ -10,7 +10,7 @@ const authRoute = require('./routes/auth.route.js')
 const categoryIncomeRoute = require("./routes/categoriesIncome.route.js")
 const categoryExpenses = require("./routes/categoriesExpenses.route.js")
 const listExpense = require('./routes/listExpense.route.js')
-
+const listIncome = require('./routes/listIncome.route.js')
 dotenv.config();
 
 
@@ -29,6 +29,7 @@ app.use('/api/compare',trendIncomeAndExpensesRoute)
 app.use("/api/category-income", categoryIncomeRoute)
 app.use("/api/category-expenses",categoryExpenses)
 app.use('/api/list-expense',listExpense)
+app.use('/api/lisst-income',listIncome)
 
 // optional simple root
 app.get('/', (req, res) => res.send('OK - server running'));
