@@ -7,6 +7,11 @@ const client = new line.Client({
 
 async function handleLineMessage(req, res) {
   try {
+    if (!req.body || !req.body.events) {
+      console.error("❌ Invalid webhook payload:", req.body);
+      return res.status(400).send("Bad Request");
+    }
+
     const events = req.body.events;
 
     for (const event of events) {
@@ -23,10 +28,12 @@ async function handleLineMessage(req, res) {
       }
     }
 
-    res.status(200).send("OK");
+    return res.status(200).send("OK");
   } catch (err) {
     console.error("Line webhook error:", err);
-    res.status(500).json({ error: err.message });
+    if (res && res.status) {
+      res.status(500).json({ error: err.message });
+    }
   }
 }
 
