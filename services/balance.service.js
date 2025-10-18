@@ -30,7 +30,7 @@ exports.calculateNetBalance = async (userId) => {
 
     // ✅ ดึง Income ภายในช่วงรอบเดือนนี้ของ user
     const { data: incomeData, error: incomeError } = await supabase
-      .from("list_income")
+      .from("category_income")
       .select("amount, created_at")
       .eq("userId", userId)
       .gte("created_at", startDate.toISOString())

@@ -3,10 +3,10 @@ const { createClient } = require("@supabase/supabase-js")
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY)
 
 // Create
-exports.createCategory = async (name, userId) => {
+exports.createCategory = async (name, userId,amount) => {
   const { data, error } = await supabase
     .from("category_income")
-    .insert([{ name, userId }])
+    .insert([{ name, userId,amount }])
     .select()
 
   if (error) throw error

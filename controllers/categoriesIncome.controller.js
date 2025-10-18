@@ -3,11 +3,11 @@ const service = require("../services/categoriesIncome.service.js")
 // Create
 exports.createCategory = async (req, res) => {
   try {
-    const { name, userId } = req.body
-    if (!name || !userId)
-      return res.status(400).json({ error: "Missing name or userId" })
+    const { name, userId,amount } = req.body
+    if (!name || !userId || !amount)
+      return res.status(400).json({ error: "Missing name or userId or amount" })
 
-    const data = await service.createCategory(name, userId)
+    const data = await service.createCategory(name, userId,amount)
     res.status(201).json({ message: "Category income created", data })
   } catch (err) {
     console.error("Create category income error:", err)
