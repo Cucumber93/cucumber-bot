@@ -27,8 +27,6 @@ async function handleLineMessage(req, res) {
         });
       }
     }
-
-    return res.status(200).send("OK");
   } catch (err) {
     console.error("Line webhook error:", err);
     if (res && res.status) {
